@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.infoplus.ezway.EzwayAdmin.mapperekycimp.EzwayImpFaceMatchMapper">
+    <select id="selectByTransId">
+        SELECT
+            'REG' AS SERVICE_TYPE,
+            MASTER.REQ_ID AS TRANS_ID,
+            MASTER.USER_ID AS CUST_NO,
+            FACE_INFO.SELFIE_FRONT_FILE_NAME AS FRONT_IMAGE,
+            FACE_INFO.SELFIE_LEFT_FILE_NAME AS LEFT_IMAGE,
+            FACE_INFO.SELFIE_RIGHT_FILE_NAME AS RIGHT_IMAGE,
+            FACE_INFO.ID_FRONT_FILE_NAME AS COMPARE_IMAGE
+        FROM EKYC_MASTER MASTER
+                 INNER JOIN EKYC_FACE_INFO FACE_INFO ON MASTER.EKYC_FACE_INFO_ID = FACE_INFO.ID
+        WHERE MASTER.APPL_TYPE = '01'
+          AND MASTER.REQ_ID = #{transId}
+    </select>
+</mapper>

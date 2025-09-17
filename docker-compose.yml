@@ -1,0 +1,17 @@
+version: '3.7'
+
+services:
+  db:
+    image: postgres:latest   # PostgreSQL
+    container_name: ezwayAdminData
+    restart: always
+    environment:
+      POSTGRES_USER: ezwayAdminData        # user
+      POSTGRES_PASSWORD: 123456 # password
+      POSTGRES_DB: db_ezway_admin          # tên database
+    volumes:
+      - ./.docker/data/db:/var/lib/postgresql/data
+      - ./db.sql:/docker-entrypoint-initdb.d/db.sql:ro # tự chạy script lúc khởi động
+    ports:
+      - "5434:5432"  # Postgres trong contaianner 5432 → local 5433
+      #run: docker-compose -f docker-compose.yml up -d --build

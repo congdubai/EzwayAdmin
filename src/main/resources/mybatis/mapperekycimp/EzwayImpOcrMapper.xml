@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.infoplus.ezway.EzwayAdmin.mapperekycimp.EzwayImpOcrMapper">
+    <select id="selectOcrByTransId">
+        SELECT
+            MASTER.REQ_ID AS TRANS_ID,
+            MASTER.USER_ID AS CUST_NO,
+            FACE_INFO.ID_FRONT_FILE_NAME AS FRONT_IMAGE,
+            FACE_INFO.ID_BACK_FILE_NAME AS BACK_IMAGE,
+            OCR.ID_NUMBER AS ID_NO,
+            OCR.NAME AS FULL_NAME,
+            OCR.GENDER AS SEX,
+            OCR.ADDRESS,
+            OCR.BIRTHDAY,
+            OCR.ID_TYPE AS DOCTYPE,
+            OCR.EXPIRY AS EXPIRATION,
+            OCR.HOMETOWN AS HOME_TOWN,
+            OCR.ISSUE_BY AS ISSUE_AT,
+            OCR.ISSUE_DATE
+        FROM EKYC_MASTER MASTER
+                 INNER JOIN OCR_RESULTS OCR ON MASTER.OCR_RESULT_ID = OCR.ID
+                 INNER JOIN EKYC_FACE_INFO FACE_INFO ON MASTER.EKYC_FACE_INFO_ID = FACE_INFO.ID
+        WHERE MASTER.APPL_TYPE = '01'
+          AND MASTER.REQ_ID = #{transId}
+    </select>
+</mapper>
