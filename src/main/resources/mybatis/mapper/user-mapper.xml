@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.infoplus.ezway.EzwayAdmin.mapper.UserMapper">
+    <resultMap id="userResultMap" type="com.infoplus.ezway.EzwayAdmin.entity.UserEntity">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="pin" column="pin"/>
+        <result property="host" column="host"/>
+        <result property="role" column="role"/>
+        <result property="visit" column="visit"/>
+        <result property="banned" column="banned"/>
+        <!-- Add other properties as needed -->
+    </resultMap>
+
+
+    <select id="findUserByEmail" resultMap="userResultMap">
+        SELECT u.id,
+               u.email,
+               u.password,
+               u.pin,
+               u.host,
+               u.role,
+               u.visit,
+               u.banned
+        FROM TBL_USER u
+        WHERE email = #{email}
+    </select>
+
+    <select id="findUserByEmployeeId">
+        SELECT *
+        FROM tbl_user
+        WHERE employee_id = #{employeeId}
+    </select>
+
+    <insert id="insertNewUser">
+        INSERT INTO tbl_user(email, password, pin, host, role)
+        VALUES (#{email}, #{password}, #{pin}, #{host}, #{role, typeHandler=org.apache.ibatis.type.EnumTypeHandler})
+    </insert>
+
+    <insert id="insertNewUserV2" >
+        INSERT INTO tbl_user
+        (email, password, pin, host, role, full_name, department, employee_id, tel_number, authorities, status )
+        VALUES
+        ( #{email}, #{password}, #{pin}, #{host}, #{role, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, #{fullName}, #{department}, #{employeeId}, #{telNumber}, #{authority}, #{status} )
+    </insert>
+
+
+
+    <update id="updateVisit">
+        UPDATE tbl_user
+        SET visit = #{visit}
+        WHERE id = #{id}
+    </update>
+
+    <update id="banUser">
+        UPDATE tbl_user
+        SET banned = '1'
+        WHERE id = #{id}
+    </update>
+
+    <update id="unBannedUser">
+        UPDATE TBL_USER
+        SET banned=false
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateNewPassword">
+        UPDATE TBL_USER
+        SET password=#{password}
+        WHERE id = #{id}
+    </update>
+
+
+    <sql id="user-condition-statement">
+        1=1
+        <if test="request.data.banned != null and request.data.banned != ''">
+            AND banned =
+            CASE #{request.data.banned}
+            WHEN 'TRUE' THEN 1
+            ELSE 0
+            END
+        </if>
+        <if test="request.data.employeeId != null and request.data.employeeId != ''">
+            AND employee_id LIKE '%' || #{request.data.employeeId} || '%'
+        </if>
+        <if test="request.data.role != null and request.data.role != ''">
+            AND role = #{request.data.role}
+        </if>
+        <if test="request.data.department != null and request.data.department != ''">
+            AND department = #{request.data.department}
+        </if>
+        )
+    </sql>
+
+    <sql id="user-dynamic-query">
+        SELECT * FROM (
+        SELECT id, employee_id, full_name, email, department, role, visit, banned,
+        COUNT(*) OVER (PARTITION BY 1) AS TOTAL_RECORDS,
+        ROW_NUMBER() OVER (ORDER BY id) AS rn
+        FROM tbl_user
+        <where>
+            <include refid="user-condition-statement"/>
+        </where>
+    </sql>
+
+    <select id="searchByCondition" >
+        <include refid="user-dynamic-query"/>
+        WHERE rn BETWEEN #{request.paging.pageSize}*(#{request.paging.pageIndex}-1)+1 AND #{request.paging.pageSize}*#{request.paging.pageIndex}
+    </select>
+
+    <select id="getUser">
+        SELECT *
+        FROM (SELECT ALL_USER.*, ROWNUM AS RN
+            FROM (SELECT *
+                    FROM TBL_USER UDATA
+                    <where>
+                        <include refid="condition-err" />
+                    </where>
+                    ORDER BY ID DESC) ALL_USER
+            WHERE ROWNUM <![CDATA[ <= ]]> #{endRow})
+        WHERE RN > #{startRow}
+    </select>
+
+    <select id="count">
+        SELECT COUNT(*) FROM TBL_USER UDATA
+        <where>
+            <include refid="condition-err" />
+        </where>
+    </select>
+
+    <sql id="condition-err">
+        <if test="request.data.employeeId != null and request.data.employeeId != ''">
+            AND UDATA.EMPLOYEE_ID LIKE '%' || #{request.data.employeeId} || '%'
+        </if>
+        <if test="request.data.role != null and request.data.role != ''">
+            AND UDATA.ROLE = #{request.data.role}
+        </if>
+<!--        <if test="request.data.status != null and request.data.status != ''">-->
+<!--            AND UDATA.STATUS = #{request.data.status}-->
+<!--        </if>-->
+        <if test="request.data.department != null and request.data.department != ''">
+            AND UDATA.DEPARTMENT = #{request.data.department}
+        </if>
+    </sql>
+
+    <update id="changeInformation">
+        UPDATE tbl_user
+        <set>
+            <if test="request.password != null and request.password != ''">password = #{request.password},</if>
+            <if test="request.fullName != null">full_name = #{request.fullName},</if>
+            <if test="request.role != null">role = #{request.role},</if>
+            <if test="request.email != null">email = #{request.email},</if>
+            <if test="request.department != null and request.department != ''">department = #{request.department},</if>
+            <if test="request.banned != null and request.banned != ''">
+                banned =
+                CASE #{request.banned}
+                WHEN 'TRUE' THEN 1
+                ELSE 0
+                END
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>
