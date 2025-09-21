@@ -16,9 +16,9 @@ public class CrossCheckController {
     @Autowired
     private CrosscheckService crosscheckService;
 
-//    @PostMapping("/detail")
-//    public ResponseEntity<CrosscheckDetailResponse> getCrossCheckDetail(@RequestBody CrosscheckDetailRequest requestBody) {
-//        long crosscheckId = requestBody.getCrosscheckId();
-//        return ResponseEntity.ok(crosscheckService.doGetCrosscheckDetail(crosscheckId));
-//    }
+    @PostMapping("/detail")
+    public ResponseEntity<CrosscheckDetailResponse> getCrossCheckDetail(@RequestBody CrosscheckDetailRequest requestBody) {
+        String transId = requestBody.getTransId();
+        return ResponseEntity.ok(crosscheckService.doGetCrosscheckDetail(transId));
+    }
 }

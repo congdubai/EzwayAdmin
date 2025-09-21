@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class CrosscheckDetailRequest {
-    private long crosscheckId;
+    private String transId;
 }

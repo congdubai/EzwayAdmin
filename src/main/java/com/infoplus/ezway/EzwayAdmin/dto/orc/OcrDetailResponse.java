@@ -1,0 +1,10 @@
+package com.infoplus.ezway.EzwayAdmin.dto.orc;
+
+import com.infoplus.ezway.EzwayAdmin.dto.BaseResponseDto;
+import com.infoplus.ezway.EzwayAdmin.dto.CommonDTO;
+import lombok.Data;
+
+@Data
+public class OcrDetailResponse extends BaseResponseDto {
+    private CommonDTO data;
+}

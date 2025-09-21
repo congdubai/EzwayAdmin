@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.infoplus.ezway.EzwayAdmin.mapper.RegistrationMapper">
+
+    <select id="selectRegistrationData">
+        <bind name="limit" value="endRow - startRow"/>
+        SELECT *
+        FROM tbl_registration_data registration
+        <where>
+            registration.lastest_registered = 'Y'
+            AND registration.is_deleted = 'N'
+            AND registration.final_status = 'Success'
+
+            <if test="request.data.transId != null and request.data.transId != ''">
+                AND registration.trans_id = #{request.data.transId}
+            </if>
+
+            <if test="request.data.startCreateDate != null and request.data.startCreateDate != ''">
+                AND registration.create_date &gt;= #{request.data.startCreateDate}::timestamp
+            </if>
+
+            <if test="request.data.endCreateDate != null and request.data.endCreateDate != ''">
+                AND registration.create_date &lt;= #{request.data.endCreateDate}::timestamp
+            </if>
+
+        </where>
+        LIMIT #{limit}
+        OFFSET #{startRow}
+    </select>
+
+
+    <select id="countAllRegistration" resultType="long">
+        SELECT COUNT(*) FROM tbl_registration_data registration
+        <where>
+            registration.lastest_registered = 'Y'
+            AND registration.is_deleted = 'N'
+            AND registration.final_status = 'Success'
+        </where>
+    </select>
+
+</mapper>
+
+

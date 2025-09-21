@@ -1,7 +1,7 @@
 package com.infoplus.ezway.EzwayAdmin.controller;
 
 import com.infoplus.ezway.EzwayAdmin.dto.BaseResponseDto;
-import com.infoplus.ezway.EzwayAdmin.dto.crosscheck.RegisterRequestDTO;
+import com.infoplus.ezway.EzwayAdmin.dto.RegisterRequestDTO;
 import com.infoplus.ezway.EzwayAdmin.service.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

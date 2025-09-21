@@ -1,9 +1,10 @@
 package com.infoplus.ezway.EzwayAdmin.dto.crosscheck;
 
 import com.infoplus.ezway.EzwayAdmin.dto.BaseResponseDto;
+import com.infoplus.ezway.EzwayAdmin.dto.CommonDTO;
 import lombok.Data;
 
 @Data
 public class CrosscheckDetailResponse extends BaseResponseDto {
-    private CrosscheckDetail data;
+    private CommonDTO data;
 }
