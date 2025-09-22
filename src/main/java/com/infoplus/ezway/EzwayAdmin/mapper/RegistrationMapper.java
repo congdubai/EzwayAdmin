@@ -11,7 +11,7 @@ import java.util.List;
 public interface RegistrationMapper {
     long countAllRegistration(@Param("request") RegistrationRequest request);
 
-    List<RegistrationDataEntity> selectRegistrationData(@Param("request")RegistrationRequest request,
+    List<RegistrationDataEntity> selectRegistrationData(@Param("request") RegistrationRequest request,
                                                         int startRow,
                                                         int endRow);
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.infoplus.ezway.EzwayAdmin.mapper.AuthMapper">
+
+    <select id="selectAuthenticationData">
+        <bind name="limit" value="endRow - startRow"/>
+        SELECT *
+        FROM tbl_authentication_data authentication
+        <where>
+            authentication.final_status = '0000'
+
+            <if test="request.data.transId != null and request.data.transId != ''">
+                AND authentication.trans_id = #{request.data.transId}
+            </if>
+
+            <if test="request.data.startCreateDate != null and request.data.startCreateDate != ''">
+                AND authentication.create_date &gt;= #{request.data.startCreateDate}::timestamp
+            </if>
+
+            <if test="request.data.endCreateDate != null and request.data.endCreateDate != ''">
+                AND authentication.create_date &lt;= #{request.data.endCreateDate}::timestamp
+            </if>
+
+        </where>
+        LIMIT #{limit}
+        OFFSET #{startRow}
+    </select>
+
+
+    <select id="countAllAuthentication" resultType="long">
+        SELECT COUNT(*) FROM tbl_authentication_data authentication
+        <where>
+            authentication.final_status = '0000'
+        </where>
+    </select>
+
+    <select id="findByTranId" >
+        SELECT auth.trans_id, auth.front_image, face.selfie_img_01, auth.final_status FROM tbl_authentication_data auth
+        JOIN tbl_facematch_data face ON auth.ekyc_trans_id = face.trans_id
+        WHERE auth.trans_id = #{transId}
+        AND auth.final_status = '0000'
+        AND face.is_latest = 'Y'
+        AND face.result_code = '0000'
+    </select>
+</mapper>
+
+
