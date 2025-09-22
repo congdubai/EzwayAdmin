@@ -2,8 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.infoplus.ezway.EzwayAdmin.mapper.OcrDataMapper">
 
-    <select id="findByTranId" >
-        SELECT transId, front_image, result_code FROM tbl_ocr_data
+    <select id="findByTransId" parameterType="string" resultType="com.infoplus.ezway.EzwayAdmin.dto.CommonDTO">
+        SELECT trans_id AS transId,
+        front_image AS image1,
+        back_image AS image2,
+        result_code AS result
+        FROM tbl_ocr_data
         WHERE trans_id = #{transId}
         AND is_latest = 'Y'
     </select>

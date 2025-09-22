@@ -2,10 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.infoplus.ezway.EzwayAdmin.mapper.CrossCheckMapper">
 
-    <select id="findByTranId" >
-        SELECT transId,selfie_img,result_code FROM tbl_crosscheck_data
-        WHERE trans_id = #{transId}
-        AND is_latest = 'Y'
+    <select id="findByTransId" >
+        SELECT crosscheck.trans_id AS transId, ocr.front_image AS image1, crosscheck.selfie_img AS image2, crosscheck.result_code AS result
+        FROM tbl_crosscheck_data crosscheck INNER JOIN tbl_ocr_data ocr
+        ON crosscheck.trans_id = ocr.trans_id
+        WHERE crosscheck.trans_id = #{transId}
+        AND crosscheck.is_latest = 'Y'
+        LIMIT 1
     </select>
 
 </mapper>
