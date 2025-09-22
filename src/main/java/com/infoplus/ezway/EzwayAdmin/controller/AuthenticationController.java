@@ -4,6 +4,7 @@ import com.infoplus.ezway.EzwayAdmin.dto.AuthenticationRequestDTO;
 import com.infoplus.ezway.EzwayAdmin.dto.BaseResponseDto;
 import com.infoplus.ezway.EzwayAdmin.service.AuthenticationService;
 import com.infoplus.ezway.EzwayAdmin.service.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,5 +23,11 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto authenticate(@Valid @RequestBody AuthenticationRequestDTO authRequest) {
         return authenticationService.authenticate(authRequest);
+    }
+
+    @GetMapping("/verify-token")
+    @ResponseStatus(HttpStatus.OK)
+    public BaseResponseDto verifyAccessToken(HttpServletRequest request) throws IOException {
+        return jwtService.verifyToken(request);
     }
 }
