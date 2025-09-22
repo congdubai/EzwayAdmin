@@ -33,8 +33,8 @@
 
     <update id="revokedToken" parameterType="com.infoplus.ezway.EzwayAdmin.entity.Token">
         UPDATE tbl_token
-        SET expired=1,
-            revoked=1
+        SET expired=true,
+            revoked=true
         WHERE id = #{id}
     </update>
 

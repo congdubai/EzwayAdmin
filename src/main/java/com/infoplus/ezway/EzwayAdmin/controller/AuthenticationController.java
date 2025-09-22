@@ -5,6 +5,7 @@ import com.infoplus.ezway.EzwayAdmin.dto.BaseResponseDto;
 import com.infoplus.ezway.EzwayAdmin.service.AuthenticationService;
 import com.infoplus.ezway.EzwayAdmin.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,11 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto authenticate(@Valid @RequestBody AuthenticationRequestDTO authRequest) {
         return authenticationService.authenticate(authRequest);
+    }
+
+    @PutMapping("/refresh-token")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        authenticationService.refreshToken(request, response);
     }
 
     @GetMapping("/verify-token")
