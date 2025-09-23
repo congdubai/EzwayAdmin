@@ -12,12 +12,10 @@ import com.infoplus.ezway.EzwayAdmin.dto.registration.RegistrationRequest;
 import com.infoplus.ezway.EzwayAdmin.dto.registration.RegistrationResponse;
 import com.infoplus.ezway.EzwayAdmin.service.AuthenticationService;
 import com.infoplus.ezway.EzwayAdmin.service.JwtService;
-<<<<<<< HEAD
 import com.infoplus.ezway.EzwayAdmin.service.auth.AuthService;
-=======
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
->>>>>>> 9fe0c811343ba5e06d57cde37633717df44331ff
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping("/api/v2/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
     @Autowired
@@ -45,7 +43,7 @@ public class AuthenticationController {
         return authenticationService.authenticate(authRequest);
     }
 
-<<<<<<< HEAD
+
     @PostMapping("/list")
     public ResponseEntity<AuthResponse> getListAuth(@RequestBody AuthRequest requestBody) throws ExecutionException, InterruptedException {
         AuthResponse res = authService.doGetListAuthentication(requestBody);
@@ -55,7 +53,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthDetailResponse> getAuthDetail(@RequestBody AuthDetailRequest requestBody) {
         String transId = requestBody.getTransId();
         return ResponseEntity.ok(authService.doGetAuthDetail(transId));
-=======
+    }
     @PutMapping("/refresh-token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authenticationService.refreshToken(request, response);
@@ -65,6 +63,6 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto verifyAccessToken(HttpServletRequest request) throws IOException {
         return jwtService.verifyToken(request);
->>>>>>> 9fe0c811343ba5e06d57cde37633717df44331ff
+
     }
 }
