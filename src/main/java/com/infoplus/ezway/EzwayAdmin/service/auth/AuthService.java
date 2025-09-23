@@ -1,15 +1,10 @@
 package com.infoplus.ezway.EzwayAdmin.service.auth;
 
-import com.infoplus.ezway.EzwayAdmin.dto.Common1DTO;
 import com.infoplus.ezway.EzwayAdmin.dto.CommonDTO;
 import com.infoplus.ezway.EzwayAdmin.dto.PagingDTO;
 import com.infoplus.ezway.EzwayAdmin.dto.auth.AuthDetailResponse;
 import com.infoplus.ezway.EzwayAdmin.dto.auth.AuthRequest;
 import com.infoplus.ezway.EzwayAdmin.dto.auth.AuthResponse;
-import com.infoplus.ezway.EzwayAdmin.dto.orc.OcrDetailResponse;
-import com.infoplus.ezway.EzwayAdmin.dto.registration.RegistrationRequest;
-import com.infoplus.ezway.EzwayAdmin.dto.registration.RegistrationResponse;
-import com.infoplus.ezway.EzwayAdmin.entity.RegistrationDataEntity;
 import com.infoplus.ezway.EzwayAdmin.entity.authen.AuthenticationDataEntity;
 import com.infoplus.ezway.EzwayAdmin.mapper.AuthMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +41,7 @@ public class AuthService {
     }
 
     public AuthDetailResponse doGetAuthDetail(String transId){
-        Common1DTO detail = authMapper.findByTransId(transId);
+        CommonDTO detail = authMapper.findByTransId(transId);
         AuthDetailResponse response = new AuthDetailResponse();
         response.setData(detail);
         return response;

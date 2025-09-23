@@ -34,12 +34,22 @@
         </where>
     </select>
 
-    <select id="findByTranId" >
-        SELECT auth.trans_id, auth.front_image, face.selfie_img_01, auth.final_status FROM tbl_authentication_data auth
-        JOIN tbl_facematch_data face ON auth.ekyc_trans_id = face.trans_id
-        WHERE auth.trans_id = #{transId}
+    <!-- detail -->
+    <!-- id đã SỬA đúng tên method: findByTransId -->
+    <select id="findByTransId"
+            parameterType="string"
+            resultType="com.infoplus.ezway.EzwayAdmin.dto.CommonDTO">
+        SELECT
+        auth.trans_id        AS transId,
+        auth.front_image     AS image1,
+        face.selfie_img_01   AS image2,
+        auth.final_status    AS result
+        FROM tbl_authentication_data auth
+        JOIN tbl_facematch_data face
+        ON auth.ekyc_trans_id = face.trans_id
+        WHERE auth.trans_id   = #{transId}
         AND auth.final_status = '0000'
-        AND face.is_latest = 'Y'
+        AND face.is_latest  = 'Y'
         AND face.result_code = '0000'
     </select>
 </mapper>
