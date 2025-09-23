@@ -28,8 +28,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private static final String[] WHITE_LIST_URL = {
-            "/api/v1/auth/login",
-            "/api/v1/auth/verify-token"
+            "/api/v2/auth/login",
+            "/api/v2/auth/verify-token"
             };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -54,7 +54,7 @@ public class WebSecurityConfig {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout(logout ->
-                        logout.logoutUrl("/api/v1/auth/logout")
+                        logout.logoutUrl("/api/v2/auth/logout")
                                 .addLogoutHandler(logoutHandler)
                                 .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
                 );
