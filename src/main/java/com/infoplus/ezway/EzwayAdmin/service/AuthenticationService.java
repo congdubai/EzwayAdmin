@@ -1,6 +1,7 @@
 package com.infoplus.ezway.EzwayAdmin.service;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infoplus.ezway.EzwayAdmin.common.Constant;
 import com.infoplus.ezway.EzwayAdmin.common.SessionUtil;
 import com.infoplus.ezway.EzwayAdmin.definition.ErrorCode;
@@ -18,6 +19,7 @@ import com.infoplus.ezway.EzwayAdmin.mapper.TokenMapper;
 import com.infoplus.ezway.EzwayAdmin.mapper.UserMapper;
 import com.infoplus.ezway.EzwayAdmin.objectmapper.UserPojoMapper;
 import com.infoplus.ezway.EzwayAdmin.utils.CookieUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -159,4 +163,33 @@ public class AuthenticationService {
         userMapper.updateVisit(user);
     }
 
+    private void revokeAllUserTokens(UserEntity user) {
+        List<Token> validUserTokens = tokenMapper.findAllValidTokenByUser(user.getId());
+        if (validUserTokens.isEmpty()) return;
+        validUserTokens.forEach(token -> {
+            token.setExpired(true).setRevoked(true);
+            tokenMapper.revokedToken(token);
+        });
+    }
+
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        final String authHeader = CookieUtils.getCookie(request, nameAuth);
+        final String refreshToken;
+        final String userEmail;
+        if (authHeader == null) {
+            return;
+        }
+        refreshToken = authHeader;
+        userEmail = jwtTokenUtil.extractEmail(refreshToken);
+        if (userEmail != null) {
+            UserEntity user = userMapper.findUserByEmail(userEmail).orElseThrow(() -> new UsernameNotFoundException("Email not found!"));
+            if (jwtTokenUtil.isTokenValid(refreshToken, user)) {
+                String accessToken = jwtTokenUtil.generateToken(user);
+                revokeAllUserTokens(user);
+                saveUserToken(user, accessToken, refreshToken);
+                AuthenticationResponseDTO authResponse = AuthenticationResponseDTO.builder().data(AuthenticationResponseDTO.TokenResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build()).build();
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
+            }
+        }
+    }
 }

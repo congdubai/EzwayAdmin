@@ -18,7 +18,7 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         if (userMapper.countAllUsers() == 0) {
             UserEntity admin = UserEntity.builder()
-                    .employeeId("st001")
+                    .employeeId("admin")
                     .fullName("System Admin")
                     .email("admin@system.com")
                     .password(passwordEncoder.encode("admin123"))
