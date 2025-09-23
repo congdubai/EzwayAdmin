@@ -117,39 +117,51 @@ public class AuthenticationService {
      * if user authenticated successfully then revoke old token
      * */
     public BaseResponseDto authenticate(AuthenticationRequestDTO authRequest) {
-        UserEntity user;
-        user = userMapper.findUserByEmployeeId(authRequest.getEmployeeId()).orElseThrow(() -> new UsernameNotFoundException(ErrorCode.E06.getDesc()));
-        SessionUtil.setSessionAttribute(Constant.CUST_ID, user.getEmployeeId());
-        if (user.isBanned()) {
-            throw new LockedException(ErrorCode.E07.getDesc());
+        UserEntity user = userMapper.findUserByEmployeeId(authRequest.getEmployeeId())
+                .orElse(null);
+
+        if (user == null) {
+            return new BaseResponseDto(ErrorCode.E06.getCode(), ErrorCode.E06.getDesc());
         }
+        SessionUtil.setSessionAttribute(Constant.CUST_ID, user.getEmployeeId());
+
+        if (user.isBanned()) {
+            return new BaseResponseDto(ErrorCode.E07.getCode(), ErrorCode.E07.getDesc());
+        }
+
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmployeeId(), authRequest.getPassword()));
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authRequest.getEmployeeId(), authRequest.getPassword())
+            );
+
             String accessToken = jwtTokenUtil.generateToken(user);
             String refreshToken = jwtTokenUtil.generateRefreshToken(user);
             saveUserToken(user, accessToken, refreshToken);
+
             if (user.getVisit() > 0) {
                 user.setVisit(0);
                 userMapper.updateVisit(user);
             }
+
             AuthenticationResponseDTO response = AuthenticationResponseDTO.builder()
                     .data(AuthenticationResponseDTO.TokenResponse.builder()
                             .accessToken(accessToken)
-                            .refreshToken(refreshToken).fullName(user.getFullName())
+                            .refreshToken(refreshToken)
+                            .fullName(user.getFullName())
                             .role(user.getRole().name())
                             .userId(user.getEmployeeId())
-                            .branch(user.getBranch()).build()).build();
+                            .branch(user.getBranch())
+                            .build())
+                    .build();
+
             CookieUtils.setCookie(httpServletResponse, nameAuth, accessToken, timeAuth);
             return response;
+
         } catch (AuthenticationException ex) {
-            log.error("AuthenticationException: ", ex);
             int prevVisit = user.getVisit();
             updateVisit(user, prevVisit + 1);
-            if (prevVisit > 3) {
-                userMapper.banUser(user);
-                throw new LimitedAccessException(ErrorCode.E08.getDesc());
-            }
-            throw new BadCredentialsException(ex.getMessage());
+            // Sai thông tin đăng nhập
+            return new BaseResponseDto(ErrorCode.E06.getCode(), ErrorCode.E06.getDesc());
         }
     }
 

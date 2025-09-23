@@ -15,7 +15,7 @@ import java.net.URLConnection;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/files")
+@RequestMapping("/api/v2/files")
 public class FileController {
     @Autowired
     private MinioService minioService;

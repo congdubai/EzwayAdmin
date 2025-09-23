@@ -16,17 +16,11 @@ public interface UserMapper {
 
     Optional<UserEntity> findUserByEmployeeId(String employeeId);
 
-    void insertNewUser(UserEntity user);
-
     void insertNewUserV2(UserEntity user);
 
     void updateVisit(UserEntity user);
 
     void banUser(UserEntity user);
-
-    void unBannedUser(UserEntity user);
-
-    void updateNewPassword(UserEntity user);
 
     @Select("SELECT COUNT(*) FROM tbl_user")
     long countAllUsers();

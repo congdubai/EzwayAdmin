@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/v2/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
     @Autowired
