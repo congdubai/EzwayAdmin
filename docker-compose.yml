@@ -1,20 +1,18 @@
 version: "3.9"
 services:
-  EzwayAdmin:
-    container_name: WebEkycAdmin
-    image: webekycadmin/shinhanekyc:admin
+  ezwayadminapi:
+    container_name: ezwayadminapi
+    image: metsakuur/shinhanekyc:admin
     restart: always
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     env_file:
       - .env
     environment:
       - TZ=Asia/Ho_Chi_Minh
-      - SERVER_PORT=8085
-      # request body beauty
     networks:
       - webekycadmin
     volumes:

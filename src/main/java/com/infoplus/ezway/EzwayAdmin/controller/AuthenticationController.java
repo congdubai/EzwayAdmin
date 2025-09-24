@@ -15,6 +15,7 @@ import com.infoplus.ezway.EzwayAdmin.service.JwtService;
 import com.infoplus.ezway.EzwayAdmin.service.auth.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class AuthenticationController {
         return authenticationService.authenticate(authRequest);
     }
 
+
     @PostMapping("/list")
     public ResponseEntity<AuthResponse> getListAuth(@RequestBody AuthRequest requestBody) throws ExecutionException, InterruptedException {
         AuthResponse res = authService.doGetListAuthentication(requestBody);
@@ -52,7 +54,6 @@ public class AuthenticationController {
         String transId = requestBody.getTransId();
         return ResponseEntity.ok(authService.doGetAuthDetail(transId));
     }
-
     @PutMapping("/refresh-token")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         authenticationService.refreshToken(request, response);
@@ -62,5 +63,6 @@ public class AuthenticationController {
     @ResponseStatus(HttpStatus.OK)
     public BaseResponseDto verifyAccessToken(HttpServletRequest request) throws IOException {
         return jwtService.verifyToken(request);
+
     }
 }

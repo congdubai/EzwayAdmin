@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping(value = "/api/v1/registration")
+@RequestMapping(value = "/api/v2/registration")
 public class RegistrationController {
 
     @Autowired
