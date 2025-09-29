@@ -12,24 +12,16 @@
         AND is_latest = 'Y'
     </select>
 
-    <select id="findByTransId2" parameterType="string" resultType="com.infoplus.ezway.EzwayAdmin.dto.CommonDTO">
-        SELECT id_card_type AS idcardType
+    <select id="findByTransId2" parameterType="string" resultType="com.infoplus.ezway.EzwayAdmin.dto.orc.OcrDataDto">
+        SELECT idcard_type AS idcardType,
         address,
-        age,
         birthday,
-        district,
         doctype,
-        ethnicity,
         expiration,
-        home_town    AS homeTown,
         id_no        AS idNo,
-        issue_at     AS issueAt,
         issue_date   AS issueDate,
         full_name    AS fullName,
         country,
-        province,
-        religion,
-        ward,
         sex,
         create_date  AS createDate,
         update_date  AS updateDate

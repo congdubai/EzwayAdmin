@@ -21,8 +21,9 @@ public class OcrService {
     public OcrDetailResponse2 doGetOcrDetail2(String transId){
         CommonDTO detail = ocrDataMapper.findByTransId(transId);
         detail.setKind("ID_OCR");
-        OcrDetailResponse2 response = ocrDataMapper.findByTransId2(transId);
-        response.setData2(detail);
+        OcrDetailResponse2 response = new OcrDetailResponse2();
+        response.setData(detail);
+        response.setData2(ocrDataMapper.findByTransId2(transId));
         return response;
     }
 }
