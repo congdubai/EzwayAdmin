@@ -8,4 +8,5 @@ public class CommonDTO {
     String image1;
     String image2;
     String result;
+    String kind;
 }
