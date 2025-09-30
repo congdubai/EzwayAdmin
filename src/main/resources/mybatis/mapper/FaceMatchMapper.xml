@@ -3,7 +3,8 @@
 <mapper namespace="com.infoplus.ezway.EzwayAdmin.mapper.FaceMatchMapper">
 
     <select id="findByTransId" >
-        SELECT facematch.trans_id AS transId, crosscheck.selfie_img AS image1, facematch.selfie_img_01 AS image2, facematch.result_code AS result
+        SELECT facematch.trans_id AS transId, crosscheck.selfie_img AS image1, facematch.selfie_img_01 AS image2, facematch.result_code AS result,
+        facematch.fr_score AS score, facematch.fr_threshold AS threshold
         FROM tbl_facematch_data facematch INNER JOIN tbl_crosscheck_data crosscheck
         ON facematch.trans_id = crosscheck.trans_id
         WHERE facematch.trans_id = #{transId}

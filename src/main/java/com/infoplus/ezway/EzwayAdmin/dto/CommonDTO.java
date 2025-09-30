@@ -9,4 +9,6 @@ public class CommonDTO {
     String image2;
     String result;
     String kind;
+    String score;
+    String threshold;
 }

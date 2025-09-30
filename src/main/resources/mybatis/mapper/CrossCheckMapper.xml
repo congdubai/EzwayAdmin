@@ -3,7 +3,8 @@
 <mapper namespace="com.infoplus.ezway.EzwayAdmin.mapper.CrossCheckMapper">
 
     <select id="findByTransId" >
-        SELECT crosscheck.trans_id AS transId, ocr.front_image AS image1, crosscheck.selfie_img AS image2, crosscheck.result_code AS result
+        SELECT crosscheck.trans_id AS transId, ocr.front_image AS image1, crosscheck.selfie_img AS image2, crosscheck.result_code AS result,
+        crosscheck.fr_score AS score, crosscheck.fr_threshold AS threshold
         FROM tbl_crosscheck_data crosscheck INNER JOIN tbl_ocr_data ocr
         ON crosscheck.trans_id = ocr.trans_id
         WHERE crosscheck.trans_id = #{transId}
