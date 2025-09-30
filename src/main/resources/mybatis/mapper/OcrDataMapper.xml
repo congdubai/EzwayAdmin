@@ -12,6 +12,24 @@
         AND is_latest = 'Y'
     </select>
 
+    <select id="findByTransId2" parameterType="string" resultType="com.infoplus.ezway.EzwayAdmin.dto.orc.OcrDataDto">
+        SELECT idcard_type AS idcardType,
+        address,
+        birthday,
+        doctype,
+        expiration,
+        id_no        AS idNo,
+        issue_date   AS issueDate,
+        full_name    AS fullName,
+        country,
+        sex,
+        create_date  AS createDate,
+        update_date  AS updateDate
+        FROM tbl_ocr_data
+        WHERE trans_id = #{transId}
+        AND is_latest = 'Y'
+    </select>
+
 </mapper>
 
 
