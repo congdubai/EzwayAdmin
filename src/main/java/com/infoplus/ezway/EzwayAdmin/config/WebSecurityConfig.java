@@ -1,6 +1,7 @@
 package com.infoplus.ezway.EzwayAdmin.config;
 
 import com.infoplus.ezway.EzwayAdmin.interceptor.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +30,10 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 public class WebSecurityConfig {
     private static final String[] WHITE_LIST_URL = {
             "/api/v2/auth/login",
-            "/api/v2/auth/verify-token"
-            };
+            "/api/v2/auth/verify-token",
+            "/api/v2/auth/refresh-token"
+
+    };
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
@@ -57,7 +60,13 @@ public class WebSecurityConfig {
                         logout.logoutUrl("/api/v2/auth/logout")
                                 .addLogoutHandler(logoutHandler)
                                 .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+                ) .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("Unauthorized or token expired");
+                        })
                 );
+        ;
         return http.build();
     }
 

@@ -22,8 +22,8 @@
             <if test="request.data.endCreateDate != null and request.data.endCreateDate != ''">
                 AND registration.create_date &lt;= #{request.data.endCreateDate}::timestamp
             </if>
-
         </where>
+        ORDER BY registration.create_date DESC
         LIMIT #{limit}
         OFFSET #{startRow}
     </select>
